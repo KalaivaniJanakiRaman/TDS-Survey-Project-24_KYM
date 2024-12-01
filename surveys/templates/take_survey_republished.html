@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Retake Survey: {{ survey.title }} - Survey Application{% endblock %}
+
+{% block content %}
+<h2>{{ survey.title }} (Republished)</h2>
+<p>{{ survey.description }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {% for result in results %}
+    <div class="question">
+        <h3>{{ forloop.counter }}. {{ result.question_text }}</h3>
+        {% for option in result.options %}
+        <div class="option">
+            <input type="radio" id="q{{ forloop.parentloop.counter }}_option{{ forloop.counter }}" 
+                   name="question_{{ forloop.parentloop.counter }}" value="{{ option.id }}" required>
+            <label for="q{{ forloop.parentloop.counter }}_option{{ forloop.counter }}">
+                {{ option.text }}
+            </label>
+            <span class="wisdom-of-crowd">
+                ({{ option.count }} responses, {{ option.percentage|floatformat:1 }}%)
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button type="submit">Submit Survey</button>
+</form>
+
+<p>This survey has been republished. You can see how others have responded in the percentages shown next to each option.</p>
+
+{% endblock %}

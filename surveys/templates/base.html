@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Survey Application{% endblock %}</title>
+    <!-- You can add your CSS links here -->
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        nav {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+        {% if user.is_authenticated %}
+            {% if user.profile.role == 'creator' %}
+                <a href="{% url 'creator_dashboard' %}">Dashboard</a>
+                <a href="{% url 'create_survey' %}">Create Survey</a>
+                <a href="{% url 'manage_surveys' %}">Manage Surveys</a>
+            {% elif user.profile.role == 'taker' %}
+                <a href="{% url 'taker_dashboard' %}">Dashboard</a>
+                <a href="{% url 'list_available_surveys' %}">Available Surveys</a>
+            {% endif %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Survey Application</p>
+    </footer>
+
+    <!-- You can add your JavaScript links here -->
+</body>
+</html>

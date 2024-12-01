@@ -1,0 +1,18 @@
+<section>
+    <h3>Completed Surveys</h3>
+    {% if completed_surveys %}
+        <ul>
+        {% for completed in completed_surveys %}
+            <li>
+                <h4>{{ completed.title }}</h4>
+                <p>Completed on: {{ completed.completion_date|date:"F d, Y" }}</p>
+                {% if completed.status == 'republished' %}
+                    <a href="{% url 'list_available_surveys' %}" class="button">Available Survey</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't completed any surveys yet.</p>
+    {% endif %}
+</section>

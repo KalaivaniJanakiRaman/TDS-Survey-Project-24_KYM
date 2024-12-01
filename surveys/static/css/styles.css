@@ -1,0 +1,62 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient from pink to orange */
+    color: #bb8080; /* Dark text color */
+}
+
+/* Header Styles */
+header {
+    background: #602e2e; /* Dark background for header */
+    color: #e29fcc; /* White text color */
+    padding: 10px 0; /* Padding around header */
+    text-align: center; /* Center align text */
+}
+
+/* Navigation Styles */
+nav ul {
+    list-style-type: none; /* Remove bullet points from list */
+}
+
+nav ul li {
+    display: inline; /* Display list items inline */
+    margin-right: 15px; /* Space between links */
+}
+
+nav ul li a {
+    color: #e2b3df; /* White text for links */
+    text-decoration: none; /* Remove underline from links */
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* Underline on hover for better UX */
+}
+
+/* Main Content Styles */
+main {
+    padding: 20px; /* Padding around main content */
+}
+
+/* Section Styles */
+section {
+    margin-bottom: 20px; /* Space between sections */
+}
+
+h1, h2 {
+    margin-bottom: 10px; /* Space below headings */
+}
+
+/* Footer Styles */
+footer {
+    text-align: center; /* Center align footer text */
+    padding: 10px 0; /* Padding around footer */
+    background-color: #552323; /* Dark background for footer */
+    color: #e2b3d8; /* White text color in footer */
+}

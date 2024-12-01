@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Survey Completed: {{ survey.title }} - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Survey Completed: {{ survey.title }}</h2>
+<p>{{ survey.description }}</p>
+
+<h3>Your Responses:</h3>
+<ul>
+    {% for response in responses %}
+    <li>
+        <strong>{{ response.question.text }}</strong>: 
+        {% if response.selected_option %}
+            {{ response.selected_option.text }}
+        {% else %}
+            No response
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'list_available_surveys' %}" class="button">Back to Available Surveys</a>
+{% endblock %}

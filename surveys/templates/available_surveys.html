@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Available Surveys - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Available Surveys</h2>
+
+{% if surveys %}
+    <ul>
+    {% for survey in surveys %}
+        <li>
+            <h3>{{ survey.title }}</h3>
+            <p>{{ survey.description }}</p>
+            <p>Created by: {{ survey.creator.username }}</p>
+            <p>Questions: {{ survey.questions.count }}</p>
+            {% if survey.status == 'republished' %}
+                <p><strong>This survey has been republished with previous response statistics.</strong></p>
+                {% if survey.user_responded %}
+                    <a href="{% url 'take_survey_republished' survey.id %}" class="button">Retake Survey (with Wisdom of Crowd)</a>
+                {% else %}
+                    <a href="{% url 'take_survey' survey.id %}?mode=wisdom" class="button">Take Survey (with Wisdom of Crowd)</a>
+                {% endif %}
+            {% else %}
+                {% if not survey.user_responded %}
+                    <a href="{% url 'take_survey' survey.id %}" class="button">Take Survey</a>
+                {% else %}
+                    <span>Already completed</span>
+                {% endif %}
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No surveys are currently available.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Creator Dashboard - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Survey Creator Dashboard</h2>
+
+<section>
+    <h3>Survey Statistics</h3>
+    <p>Total Surveys: {{ total_surveys }}</p>
+    <p>Draft Surveys: {{ draft_surveys.count }}</p>
+    <p>Published Surveys: {{ published_surveys.count }}</p>
+    <p>Closed Surveys: {{ closed_surveys.count }}</p>
+    <p>Republished Surveys: {{ republished_surveys.count }}</p>
+</section>
+
+<section>
+    <h3>Draft Surveys</h3>
+    <ul>
+        {% for survey in draft_surveys %}
+        <li>
+            {{ survey.title }} 
+            <a href="{% url 'edit_survey' survey.id %}">Edit</a>
+            <a href="{% url 'publish_survey' survey.id %}">Publish</a>
+        </li>
+        {% empty %}
+        <li>No draft surveys available.</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section>
+    <h3>Published Surveys</h3>
+    <ul>
+        {% for survey in published_surveys %}
+        <li>
+            {{ survey.title }} 
+            (Responses: {{ survey.response_count }})
+            <a href="{% url 'view_survey_results' survey.id %}">View Results</a>
+            <a href="{% url 'close_survey' survey.id %}">Close</a>
+        </li>
+        {% empty %}
+        <li>No published surveys available.</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section>
+    <h3>Closed Surveys</h3>
+    <ul>
+        {% for survey in closed_surveys %}
+        <li>
+            {{ survey.title }} 
+            (Total Responses: {{ survey.response_count }})
+            <a href="{% url 'view_survey_results' survey.id %}">View Results</a>
+            <a href="{% url 'republish_survey' survey.id %}">Republish</a> <!-- Added republish link -->
+        </li>
+        {% empty %}
+        <li>No closed surveys available.</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section>
+    <h3>Republished Surveys</h3> <!-- New section for republished surveys -->
+    <ul>
+        {% for survey in republished_surveys %}
+        <li>
+            {{ survey.title }} 
+            (Responses: {{ survey.response_count }})
+            <a href="{% url 'view_survey_results' survey.id %}">View Results</a>
+            <!-- Add any additional actions if needed -->
+        </li>
+        {% empty %}
+        <li>No republished surveys available.</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<a href="{% url 'create_survey' %}" class="button">Create New Survey</a>
+
+{% endblock %}

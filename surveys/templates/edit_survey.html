@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Survey - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Edit Survey: {{ survey.title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="title">Survey Title:</label>
+        <input type="text" name="title" id="title" value="{{ survey.title }}" required>
+    </div>
+    <div>
+        <label for="description">Survey Description:</label>
+        <textarea name="description" id="description" required>{{ survey.description }}</textarea>
+    </div>
+
+    <div id="questions">
+        <h3>Questions</h3>
+        {% for question in survey.questions.all %}
+        <div class="question">
+            <input name="question_id[]" value="{{question.id}}" hidden>
+            <input type="text" name="question_text[]" value="{{ question.text }}" required>
+            <select name="question_type[]">
+                <option value="radio" {% if question.question_type == 'radio' %}selected{% endif %}>Single Choice (Radio)</option>
+                <option value="checkbox" {% if question.question_type == 'checkbox' %}selected{% endif %}>Multiple Choice (Checkbox)</option>
+            </select>
+            <div class="options">
+                {% for option in question.options.all %}
+                <input type="text" name="options_{{ forloop.parentloop.counter0 }}[]" value="{{ option.text }}" required>
+                {% endfor %}
+            </div>
+            <button type="button" class="add-option">Add Option</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" id="add-question">Add Question</button>
+    <button type="submit">Save Changes</button>
+</form>
+
+<script>
+    document.getElementById('add-question').addEventListener('click', function() {
+        const questionsDiv = document.getElementById('questions');
+        const questionIndex = questionsDiv.children.length; // Get current question index
+        const newQuestion = document.createElement('div');
+        newQuestion.className = 'question';
+        newQuestion.innerHTML = `
+            <input type="text" name="question_text[]" placeholder="Question" required>
+            <select name="question_type[]">
+                <option value="radio">Single Choice (Radio)</option>
+                <option value="checkbox">Multiple Choice (Checkbox)</option>
+            </select>
+            <div class="options">
+                <input type="text" name="options_${questionIndex}[]" placeholder="Option" required>
+                <input type="text" name="options_${questionIndex}[]" placeholder="Option" required>
+            </div>
+            <button type="button" class="add-option">Add Option</button>
+        `;
+        questionsDiv.appendChild(newQuestion);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.className === 'add-option') {
+            const questionDiv = e.target.closest('.question');
+            const optionsDiv = questionDiv.querySelector('.options');
+            const questionIndex = Array.from(document.getElementById('questions').children).indexOf(questionDiv)-1; // Get question index
+            console.log("Question index",questionIndex);
+            const newOption = document.createElement('input');
+            newOption.type = 'text';
+            newOption.name = `options_${questionIndex}[]`; // Correctly assigns name based on the question's index
+            newOption.placeholder = 'Option';
+            newOption.required = true;
+            optionsDiv.appendChild(newOption);
+        }
+    });
+</script>
+
+{% endblock %}

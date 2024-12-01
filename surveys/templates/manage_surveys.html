@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Surveys - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Manage Surveys</h2>
+
+<h3>Draft Surveys</h3>
+<ul>
+    {% for survey in draft_surveys %}
+    <li>
+        {{ survey.title }}
+        <a href="{% url 'edit_survey' survey.id %}">Edit</a>
+        <a href="{% url 'publish_survey' survey.id %}">Publish</a>
+    </li>
+    {% empty %}
+    <li>No draft surveys available.</li>
+    {% endfor %}
+</ul>
+
+<h3>Published Surveys</h3>
+<ul>
+    {% for survey in published_surveys %}
+    <li>
+        {{ survey.title }}
+        <a href="{% url 'view_survey_results' survey.id %}">View Results</a>
+        <a href="{% url 'close_survey' survey.id %}">Close</a>
+    </li>
+    {% empty %}
+    <li>No published surveys available.</li>
+    {% endfor %}
+</ul>
+
+<h3>Closed Surveys</h3>
+<ul>
+    {% for survey in closed_surveys %}
+    <li>
+        {{ survey.title }}
+        <a href="{% url 'view_survey_results' survey.id %}">View Results</a>
+    </li>
+    {% empty %}
+    <li>No closed surveys available.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'create_survey' %}">Create New Survey</a>
+{% endblock %}

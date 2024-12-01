@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Survey Results: {{ survey.title }} - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Survey Results: {{ survey.title }}</h2>
+<p>{{ survey.description }}</p>
+
+<div class="survey-stats">
+    <p>Total Responses: {{ total_responses }}</p>
+    <p>Status: {{ survey.get_status_display }}</p>
+</div>
+
+{% for question in results %}
+<div class="question-results">
+    <h3>{{ forloop.counter }}. {{ question.question }}</h3>
+    <p>Question Type: {{ question.get_question_type_display }}</p>
+    
+    <ul>
+    {% for option in question.options %}
+        <li>
+            {{ option.text }}: 
+            {{ option.count }} users 
+            ({{ option.percentage|floatformat:1 }}%)
+            <div class="progress-bar" style="width: {{ option.percentage }}%;"></div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+
+{% if survey.status == 'published' %}
+<form method="post" action="{% url 'close_survey' survey.id %}">
+    {% csrf_token %}
+    <button type="submit">Close Survey</button>
+</form>
+{% elif survey.status == 'closed' %}
+<form method="post" action="{% url 'republish_survey' survey.id %}">
+    {% csrf_token %}
+    <button type="submit">Republish Survey</button>
+</form>
+{% endif %}
+
+<a href="{% url 'manage_surveys' %}" class="button">Back to Manage Surveys</a>
+
+{% endblock %}

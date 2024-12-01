@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Survey - Survey Application{% endblock %}
+
+{% block content %}
+<h2>Create a New Survey</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="title">Survey Title:</label>
+        <input type="text" name="title" id="title" required>
+    </div>
+    <div>
+        <label for="description">Survey Description:</label>
+        <textarea name="description" id="description" required></textarea>
+    </div>
+
+    <div id="questions">
+        <h3>Questions</h3>
+        <!-- Initial question block -->
+        <div class="question">
+            <input type="text" name="question_text[]" placeholder="Question" required>
+            <select name="question_type[]">
+                <option value="radio">Single Choice (Radio)</option>
+                <option value="checkbox">Multiple Choice (Checkbox)</option>
+            </select>
+            <div class="options">
+                <input type="text" name="options_0[]" placeholder="Option" required>
+                <input type="text" name="options_0[]" placeholder="Option" required>
+            </div>
+            <button type="button" class="add-option" data-question-index="0">Add Option</button>
+        </div>
+    </div>
+
+    <button type="button" id="add-question">Add Question</button>
+    <button type="submit">Save as Draft</button>
+</form>
+
+<script>
+    document.getElementById('add-question').addEventListener('click', function() {
+        const questionsDiv = document.getElementById('questions');
+        const questionIndex = questionsDiv.children.length-1; // Use the number of existing questions as the index
+        const newQuestion = document.createElement('div');
+        newQuestion.className = 'question';
+        newQuestion.innerHTML = `
+            <input type="text" name="question_text[]" placeholder="Question" required>
+            <select name="question_type[]">
+                <option value="radio">Single Choice (Radio)</option>
+                <option value="checkbox">Multiple Choice (Checkbox)</option>
+            </select>
+            <div class="options">
+                <input type="text" name="options_${questionIndex}[]" placeholder="Option" required>
+                <input type="text" name="options_${questionIndex}[]" placeholder="Option" required>
+            </div>
+            <button type="button" class="add-option" data-question-index="${questionIndex}">Add Option</button>
+        `;
+        questionsDiv.appendChild(newQuestion);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.className == 'add-option') {
+            const questionIndex = e.target.getAttribute('data-question-index');
+            const optionsDiv = e.target.previousElementSibling;
+            const newOption = document.createElement('input');
+            newOption.type = 'text';
+            newOption.name = `options_${questionIndex}[]`; // Assign the correct group name
+            newOption.placeholder = 'Option';
+            newOption.required = true;
+            optionsDiv.appendChild(newOption);
+        }
+    });
+</script>
+{% endblock %}

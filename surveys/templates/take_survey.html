@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Survey: {{ survey.title }} - Survey Application{% endblock %}
+
+{% block content %}
+<h2>{{ survey.title }}</h2>
+<p>{{ survey.description }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {% for question in questions %}
+    <div class="question">
+        <h3>{{ forloop.counter }}. {{ question.text }}</h3>
+        {% for option in question.options.all %}
+        <div class="option">
+            <input type="radio" id="q{{ question.id }}_option{{ option.id }}" 
+                   name="question_{{ question.id }}" value="{{ option.id }}" required>
+            <label for="q{{ question.id }}_option{{ option.id }}">{{ option.text }}</label>
+            
+            {% if survey.status == 'republished' and option.selection_percentage is not None %}
+            <span class="previous-stats">({{ option.selection_percentage|floatformat:1 }}% chose this)</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button type="submit">Submit Survey</button>
+</form>
+
+{% if survey.status == 'published' %}
+    <p>This survey is currently published. Please fill out the questions.</p>
+{% elif survey.status == 'republished' %}
+    <p>This survey has been republished. You can see how others have responded.</p>
+{% endif %}
+
+{% endblock %}
